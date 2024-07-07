@@ -21,7 +21,7 @@ class Result
      * The function is expected to return a STRING.
      * The function accepts STRING_ARRAY grid as parameter.
      */
-
+    
     public static string gridChallenge(List<string> grid)
     {
         int columns = grid[0].Length;
