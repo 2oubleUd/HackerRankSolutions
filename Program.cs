@@ -16,42 +16,42 @@ class Result
 {
 
     /*
-     * Complete the 'gridChallenge' function below.
+     * Complete the 'superGrid' function below.
      *
-     * The function is expected to return a STRING.
-     * The function accepts STRING_ARRAY grid as parameter.
+     * The function is expected to return an INTEGER.
+     * The function accepts following parameters:
+     *  1. STRING n
+     *  2.INTEGER k
      */
 
-    public static string gridChallenge(List<string> grid)
+    private static int superDigit(long input)
     {
-        int columns = grid[0].Length;
-        int rows = grid.Count();
 
-        List<string> columnList = new List<string>();
-        for (int j = 0; j < columns; j++)
+        if (input < 10) return (int)input;
+        long sum = 0;
+        while (input > 0)
         {
-            StringBuilder sb = new StringBuilder();
+            sum += input % 10; // 11 % 10 = 1 -> 1 % 10 = 1
+            input /= 10; // 11 / 10 = 1 -> 1 / 10 == 0
+        }
+        return superDigit(sum);
+    }
 
-            for (int i = 0; i < rows; i++)
-            {
-                grid[i] = String.Concat(grid[i].OrderBy(c => c));
-                sb.Append(grid[i][j]);
-            }
-            columnList.Add(sb.ToString());
+    public static int superDigit(string n, int k)
+    {
+        long num = 0;
 
-            if (columnList[j] != String.Concat(columnList[j].OrderBy(c => c)))
-            {
-                return "NO";
-            }
-            if (columnList[j] == String.Concat(columnList[j].OrderBy(c => c)))
-            {
-                continue;
-            }
+        foreach (char c in n)
+        {
+            num += c - '0';
         }
 
-        return "YES";
+        num *= k;
+
+        return superDigit(num);
     }
 }
+
 
 class Solution
 {
@@ -59,26 +59,20 @@ class Solution
     {
         //TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
 
-        int t = Convert.ToInt32(Console.ReadLine().Trim());
+        string[] firstMultipleInput = Console.ReadLine().TrimEnd().Split(' ');
 
-        for (int tItr = 0; tItr < t; tItr++)
-        {
-            int n = Convert.ToInt32(Console.ReadLine().Trim());
+        string n = firstMultipleInput[0];
 
-            List<string> grid = new List<string>();
+        int k = Convert.ToInt32(firstMultipleInput[1]);
 
-            for (int i = 0; i < n; i++)
-            {
-                string gridItem = Console.ReadLine();
-                grid.Add(gridItem);
-            }
+        int result = Result.superDigit(n, k);
 
-            string result = Result.gridChallenge(grid);
-            Console.WriteLine(result);
-            //textWriter.WriteLine(result);
-        }
+        Console.WriteLine(result);
+
+        //textWriter.WriteLine(result);
 
         //textWriter.Flush();
         //textWriter.Close();
+
     }
 }
