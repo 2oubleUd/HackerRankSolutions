@@ -11,68 +11,68 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Text;
 using System;
+using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
+using System.Dynamic;
 
 class Result
 {
 
     /*
-     * Complete the 'superGrid' function below.
+     * Complete the 'minimumBribes' function below.
      *
-     * The function is expected to return an INTEGER.
-     * The function accepts following parameters:
-     *  1. STRING n
-     *  2.INTEGER k
+     * The function accepts INTEGER_ARRAY q as parameter.
      */
-
-    private static int superDigit(long input)
+    private static IList<T> Swap<T>(IList<T> list, int indexA, int indexB)
     {
-
-        if (input < 10) return (int)input;
-        long sum = 0;
-        while (input > 0)
-        {
-            sum += input % 10; // 11 % 10 = 1 -> 1 % 10 = 1
-            input /= 10; // 11 / 10 = 1 -> 1 / 10 == 0
-        }
-        return superDigit(sum);
+        T tmp = list[indexA];
+        list[indexA] = list[indexB];
+        list[indexB] = tmp;
+        return list;
     }
-
-    public static int superDigit(string n, int k)
+    public static void minimumBribes(List<int> q)
     {
-        long num = 0;
+        int bribes = 0;
+        List<int> ordered = new List<int>();
+        for (int i = 0; i < q.Count; i++) ordered.Add(i + 1);
 
-        foreach (char c in n)
+        for (int i = 0; i < q.Count; i++)
         {
-            num += c - '0';
+            if (q[i] == ordered[i]) continue;
+            if (q[i] != ordered[i])
+            {
+                Swap(ordered, i, i + 1);
+
+                if (q[i] != ordered[i])
+                {
+                    Swap(ordered, i, i + 2);
+                    if (q[i] == ordered[i]) bribes += 2;
+                    else
+                    {
+                        Console.WriteLine("Too chaotic");
+                        return;
+                    }
+                }
+                else bribes++;
+            }
         }
-
-        num *= k;
-
-        return superDigit(num);
+        Console.WriteLine(bribes);
     }
 }
-
 
 class Solution
 {
     public static void Main(string[] args)
     {
-        //TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+        int t = Convert.ToInt32(Console.ReadLine().Trim());
 
-        string[] firstMultipleInput = Console.ReadLine().TrimEnd().Split(' ');
+        for (int tItr = 0; tItr < t; tItr++)
+        {
+            int n = Convert.ToInt32(Console.ReadLine().Trim());
 
-        string n = firstMultipleInput[0];
+            List<int> q = Console.ReadLine().TrimEnd().Split(' ').ToList().Select(qTemp => Convert.ToInt32(qTemp)).ToList();
 
-        int k = Convert.ToInt32(firstMultipleInput[1]);
-
-        int result = Result.superDigit(n, k);
-
-        Console.WriteLine(result);
-
-        //textWriter.WriteLine(result);
-
-        //textWriter.Flush();
-        //textWriter.Close();
-
+            Result.minimumBribes(q);
+        }
     }
 }
